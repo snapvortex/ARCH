@@ -3,6 +3,7 @@ const params = new URLSearchParams(location.search);
 const id = parseInt(params.get('id'), 10) || 1;
 const idx = Math.max(0, PROJECTS.findIndex(p => p.id === id));
 const p = PROJECTS[idx];
+const pad2 = n => String(n).padStart(2, '0');
 
 /* Заголовок вкладки */
 document.title = p.title + ' — ARX®';
@@ -39,18 +40,65 @@ p.description.forEach(par => {
   text.appendChild(el);
 });
 
-/* Галерея */
+/* ---------- ГАЛЕРЕЯ-СЛАЙДЕР ---------- */
+const galleryWrap = document.getElementById('pGalleryWrap');
 const gallery = document.getElementById('pGallery');
-if (p.gallery && p.gallery.length) {
-  p.gallery.forEach(src => {
+
+if (!p.gallery || p.gallery.length === 0) {
+  galleryWrap.style.display = 'none';
+} else {
+  /* создаём слайды */
+  p.gallery.forEach((src, k) => {
+    const slide = document.createElement('div');
+    slide.className = 'pg-slide' + (k === 0 ? ' is-active' : '');
     const img = document.createElement('img');
     img.loading = 'lazy';
     img.src = src;
-    img.alt = p.title;
-    gallery.appendChild(img);
+    img.alt = p.title + ' — фото ' + (k + 1);
+    slide.appendChild(img);
+    gallery.appendChild(slide);
   });
-} else {
-  document.getElementById('pGalleryWrap').style.display = 'none';
+
+  /* панель управления */
+  const ui = document.createElement('div');
+  ui.className = 'pg-ui';
+  ui.innerHTML =
+    '<span class="pg-counter" id="pgCounter">' + pad2(1) + ' / ' + pad2(p.gallery.length) + '</span>' +
+    '<button class="arrow" id="pgPrev" aria-label="Назад">←</button>' +
+    '<button class="arrow" id="pgNext" aria-label="Вперёд">→</button>';
+  galleryWrap.appendChild(ui);
+
+  const gSlides = gallery.querySelectorAll('.pg-slide');
+  const gCounter = document.getElementById('pgCounter');
+  let gIdx = 0;
+
+  function gShow(n) {
+    gIdx = (n + gSlides.length) % gSlides.length;
+    gSlides.forEach((s, k) => s.classList.toggle('is-active', k === gIdx));
+    gCounter.textContent = pad2(gIdx + 1) + ' / ' + pad2(gSlides.length);
+  }
+
+  document.getElementById('pgNext').onclick = () => gShow(gIdx + 1);
+  document.getElementById('pgPrev').onclick = () => gShow(gIdx - 1);
+
+  /* стрелки на клавиатуре */
+  addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') gShow(gIdx + 1);
+    if (e.key === 'ArrowLeft') gShow(gIdx - 1);
+  });
+
+  /* свайпы на мобильных */
+  let gx0 = null;
+  gallery.addEventListener('touchstart', e => gx0 = e.touches[0].clientX, { passive: true });
+  gallery.addEventListener('touchend', e => {
+    if (gx0 === null) return;
+    const dx = e.changedTouches[0].clientX - gx0;
+    if (Math.abs(dx) > 50) { dx < 0 ? gShow(gIdx + 1) : gShow(gIdx - 1); }
+    gx0 = null;
+  }, { passive: true });
+
+  /* если фото всего одно — прячем стрелки и счётчик */
+  if (p.gallery.length < 2) ui.style.display = 'none';
 }
 
 /* Предыдущий / следующий проект */
