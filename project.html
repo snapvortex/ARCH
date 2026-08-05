@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Проект — ARX®</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <a class="logo" href="index.html">ARX<sup>®</sup></a>
+  <a class="back-link" href="index.html#projects">← Все проекты</a>
+</header>
+
+<main>
+  <!-- Хиро-изображение проекта -->
+  <section class="p-hero">
+    <img id="pHero" src="" alt="">
+    <div class="p-hero-caption">
+      <span class="num" id="pNum"></span>
+      <span class="title" id="pTitle"></span>
+      <span class="credit" id="pCredit"></span>
+    </div>
+  </section>
+
+  <!-- Характеристики -->
+  <section class="p-meta-wrap">
+    <ul class="p-meta" id="pMeta"></ul>
+  </section>
+
+  <!-- Описание -->
+  <section class="p-desc">
+    <div class="label" id="pLabel"></div>
+    <div id="pText"></div>
+  </section>
+
+  <!-- Галерея (появится, когда добавите фото в projects.js) -->
+  <section class="p-gallery-wrap" id="pGalleryWrap">
+    <div class="p-gallery" id="pGallery"></div>
+  </section>
+
+  <!-- Навигация между проектами -->
+  <nav class="p-nav">
+    <a id="pPrev" href="#"><span>← Предыдущий</span><b></b></a>
+    <a id="pNext" href="#"><span>Следующий →</span><b></b></a>
+  </nav>
+</main>
+
+<footer id="contact">
+  <div class="footer-bottom">
+    <span>© <span id="year"></span> ARX®</span>
+    <a href="mailto:hello@arx.studio">hello@arx.studio</a>
+  </div>
+</footer>
+
+<script src="projects.js"></script>
+<script src="project.js"></script>
+</body>
+</html>
